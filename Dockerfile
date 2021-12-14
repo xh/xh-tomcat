@@ -12,5 +12,5 @@ RUN cd webapps && \
   rm -rf host-manager
 
 # Copy in customized server.xml - look for <!-- ExHI ... --> comments.
-# Note - this should be compared and updated as needed across Tomcat versions - current as of 8.5.60.
+# Note - this should be compared and updated as needed across Tomcat versions - current as of 8.5.73.
 COPY conf/server.xml /usr/local/tomcat/conf/
