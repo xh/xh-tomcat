@@ -12,7 +12,7 @@ See this project's README for details on how images are tagged for use with diff
 
 * tomcat `8.5` (exact version dependent on build time)
 
-## v2.1.0 - 2022-06-23 (tagged as next-jdk17) + 2023-05-25 (tagged as 2.1.0-jdk17)
+## v2.1.0 - 2022-06-23 (tagged as next-jdkXX) + 2023-05-25 (tagged as 2.1.0-jdkXX)
 
 * Tomcat 8.5.81
 * Update `maxPostSize` in `server.xml` overrides from 20mb -> 50mb.
@@ -22,7 +22,7 @@ remained in "next" status (without any further updates) for almost a year. We ar
 work to move to stable `x.y.z` tags + regularly rebuilt `next` tags across this set of images. Going forward, the `next`
 tag will have a newer version of Tomcat based on the latest stable build of the official image, as detailed above.
 Applications that were using the `next` tag prior to 2023-05-25 and wish to get back to the same underlying version
-of Tomcat can spec the `2.1.0-jdkxx` tag, although we recommend moving to the latest versioned tag instead. The `next`
+of Tomcat can spec the `2.1.0-jdkXX` tag, although we recommend moving to the latest versioned tag instead. The `next`
 tag should be reserved for testing or apps that for some reason require a "snapshot" style build of this image.
 
 
