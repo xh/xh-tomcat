@@ -1,4 +1,4 @@
-FROM tomcat:8.5.81-jdk17-temurin-focal
+FROM tomcat:8.5-jdk17
 
 # Install some useful basic utilities
 RUN apt-get update && apt-get install -y nano vim procps htop dnsutils
