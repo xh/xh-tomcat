@@ -11,6 +11,7 @@ See this project's README for details on how images are tagged for use with diff
 ## next - under development
 
 * tomcat `8.5` (exact version dependent on build time)
+* Skipped install of `vim` to minimize exposure to reported vulnerabilities within that package.
 
 ## v2.1.0 - 2022-06-23 (tagged as next-jdkXX) + 2023-05-25 (tagged as 2.1.0-jdkXX)
 
