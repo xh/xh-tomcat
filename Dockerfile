@@ -1,4 +1,4 @@
-FROM tomcat:8.5-jdk11
+FROM tomcat:8.5.81-jdk11-temurin-focal
 
 # Install some useful basic utilities
 RUN apt-get update && apt-get install -y nano vim procps htop dnsutils
