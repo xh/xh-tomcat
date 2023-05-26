@@ -1,7 +1,7 @@
 FROM tomcat:8.5-jdk11
 
 # Install some useful basic utilities
-RUN apt-get update && apt-get install -y nano vim procps htop dnsutils
+RUN apt-get update && apt-get install -y nano procps htop dnsutils
 
 # Clean up standard bundled webapps
 RUN cd webapps && \
