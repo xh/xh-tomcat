@@ -1,16 +1,18 @@
 # Changelog
 
-Note that the `next` tag (and JDK-specific variants) is mutable and is rebuilt regularly with any updates to this
-project and on a weekly schedule (to pick up ongoing updates to the official `tomcat:8.5` source image).
+Note that the `next-jdkXX` tags are mutable and are rebuilt after any updates to this project and on a weekly schedule.
+This ensures the `next` series tags pick up ongoing updates to the official `tomcat:9.0` base image.
 
-Versioned builds are immutable and have locked-in a given set of defaults from this project as well as the latest Tomcat
-version at the time of the build (recorded in the log entries below).
+Versioned builds are immutable and have locked-in the latest Tomcat version at the time of the build (recorded in the
+log entries below). These are recommended for production use in applications, to ensure a known-good version of Tomcat
+is used for deployments, without the possibility of unexpected container updates from one app build to the next.
 
 See this project's README for details on how images are tagged for use with different supported JDK versions.
 
 ## next - under development
 
-* tomcat `8.5` (exact version dependent on build time)
+* Tomcat `9.0` (exact version dependent on build time)
+* Increase maxPostSize limit imposed by Tomcat to 100mb.
 
 ## v2.2.0 - 2023-05-25
 
