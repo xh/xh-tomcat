@@ -12,16 +12,20 @@ See this project's README for details on how images are tagged for use with diff
 ## next - under development
 
 * Tomcat `9.0` (exact version dependent on build time)
+
+## v3.0.0 - 2023-05-31
+
+* Tomcat `9.0.75`
 * Increase maxPostSize limit imposed by Tomcat to 100mb.
 
 ## v2.2.0 - 2023-05-25
 
-* Tomcat 8.5.89
+* Tomcat `8.5.89`
 * Skipped install of `vim` to minimize exposure to reported vulnerabilities within that package.
 
 ## v2.1.0 - 2022-06-23 (tagged as next-jdkXX) + 2023-05-25 (tagged as 2.1.0-jdkXX)
 
-* Tomcat 8.5.81
+* Tomcat `8.5.81`
 * Update `maxPostSize` in `server.xml` overrides from 20mb -> 50mb.
 
 Note: This image was published with the `next-jdkXX` tag with the above version of Tomcat in June 2022, where it
