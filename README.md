@@ -24,6 +24,8 @@ with each other and build/publish with dedicated tags.
 | develop-jdk11 |     11      | `next-jdk11`                          |
 | develop-jdk17 |     17      | `next-jdk17`                          |
 
+The images above are all [available on Docker Hub](https://hub.docker.com/r/xhio/xh-tomcat/).
+
 ----
 📫☎️🌎 info@xh.io | https://xh.io/contact
 
