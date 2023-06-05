@@ -16,13 +16,13 @@ This repo does support multiple versions of the JDK, however, with distinct bran
 with each other and build/publish with dedicated tags.
 
 | Branch        | Tomcat Version | JDK Version | Docker Tag(s)                         |
-|---------------|----------------|:-----------:|---------------------------------------|
-| master-jdk8   | 9.0.75         |      8      | `X.Y.Z-jdk8`, `latest-jdk8`, `latest` |
-| master-jdk11  | 9.0.75         |     11      | `X.Y.Z-jdk11`, `latest-jdk11`         |
-| master-jdk17  | 9.0.75         |     17      | `X.Y.Z-jdk17`, `latest-jdk17`         |
-| develop-jdk8  | latest 9.0.x   |      8      | `next-jdk8`                           |
-| develop-jdk11 | latest 9.0.x   |     11      | `next-jdk11`                          |
-| develop-jdk17 | latest 9.0.x   |     17      | `next-jdk17`                          |
+|---------------|:--------------:|:-----------:|---------------------------------------|
+| master-jdk8   |     9.0.75     |      8      | `X.Y.Z-jdk8`, `latest-jdk8`, `latest` |
+| master-jdk11  |     9.0.75     |     11      | `X.Y.Z-jdk11`, `latest-jdk11`         |
+| master-jdk17  |     9.0.75     |     17      | `X.Y.Z-jdk17`, `latest-jdk17`         |
+| develop-jdk8  |  latest 9.0.x  |      8      | `next-jdk8`                           |
+| develop-jdk11 |  latest 9.0.x  |     11      | `next-jdk11`                          |
+| develop-jdk17 |  latest 9.0.x  |     17      | `next-jdk17`                          |
 
 The images above are all [available on Docker Hub](https://hub.docker.com/r/xhio/xh-tomcat/).
 
