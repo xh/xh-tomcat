@@ -1,4 +1,4 @@
-FROM tomcat:9.0.75-jdk8
+FROM tomcat:9.0.96-jdk8
 
 # Install some useful basic utilities
 RUN apt-get update && apt-get install -y nano procps htop dnsutils
