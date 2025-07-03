@@ -73,6 +73,7 @@
                maxPostSize="100000000"
                redirectPort="8443"
                maxParameterCount="1000"
+               maxHttpHeaderSize="65536"
                />
     <!-- A "Connector" using the shared thread pool-->
     <!--
