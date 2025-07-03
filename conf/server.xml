@@ -67,12 +67,17 @@
          APR (HTTP/AJP) Connector: /docs/apr.html
          Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
     -->
-    <!-- XH CUSTOMIZATION - increase connectionTimeout 20s->30s, maxPostSize to 2MB->100MB (for e.g. large grid exports). -->
+    <!-- XH CUSTOMIZATION
+      - increase connectionTimeout 20s->30s
+      - maxPostSize to 2MB->100MB (for e.g. large grid exports).
+      - maxHttpHeaderSize to 8KB->64KB (for large Oauth2 headers)
+      -->
     <Connector port="8080" protocol="HTTP/1.1"
                connectionTimeout="30000"
                maxPostSize="100000000"
                redirectPort="8443"
                maxParameterCount="1000"
+               maxHttpHeaderSize="65536"
                />
     <!-- A "Connector" using the shared thread pool-->
     <!--
