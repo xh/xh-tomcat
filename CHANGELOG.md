@@ -13,6 +13,11 @@ See this project's README for details on how images are tagged for use with diff
 
 * Tomcat `9.0` (exact version dependent on build time)
 
+## 3.2.0 - 2025-07-08
+
+* Tomcat `9.0.107`
+* Increase `maxHttpHeaderSize` limit imposed by Tomcat to 64kb.
+
 ## 3.1.0 - 2024-10-14
 
 * Tomcat `9.0.96`
@@ -20,7 +25,7 @@ See this project's README for details on how images are tagged for use with diff
 ## 3.0.0 - 2023-05-31
 
 * Tomcat `9.0.75`
-* Increase maxPostSize limit imposed by Tomcat to 100mb.
+* Increase `maxPostSize` limit imposed by Tomcat to 100mb.
 
 ## 2.2.0 - 2023-05-25
 
