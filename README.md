@@ -17,10 +17,8 @@ with each other and build/publish with dedicated tags.
 
 | Branch        | JDK Version | Docker Tag(s)                         |
 |---------------|:-----------:|---------------------------------------|
-| master-jdk8   |      8      | `X.Y.Z-jdk8`, `latest-jdk8`, `latest` |
 | master-jdk11  |     11      | `X.Y.Z-jdk11`, `latest-jdk11`         |
 | master-jdk17  |     17      | `X.Y.Z-jdk17`, `latest-jdk17`         |
-| develop-jdk8  |      8      | `next-jdk8`                           |
 | develop-jdk11 |     11      | `next-jdk11`                          |
 | develop-jdk17 |     17      | `next-jdk17`                          |
 
