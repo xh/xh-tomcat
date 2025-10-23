@@ -8,8 +8,8 @@ deployments with additional configurations.
 
 ## Tomcat version, JDK versions and Docker tags
 
-All images produced by this repo are currently using **Tomcat 9.0**. The specific patch version of Tomcat is baked
-into an image when it is built, based on how the source `tomcat:9.0` image resolves. We record the current full Tomcat
+All images produced by this repo are currently using **Tomcat 9.0** or **Tomcat 10.0** . The specific patch version of Tomcat is baked
+into an image when it is built, based on how the source `tomcat:x.0` image resolves. We record the current full Tomcat
 version strings for versioned xh-tomcat releases in our CHANGELOG.
 
 This repo does support multiple versions of the JDK, however, with distinct branches for each that we keep in sync
