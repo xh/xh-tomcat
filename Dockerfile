@@ -1,4 +1,6 @@
-FROM tomcat:9.0-jdk17
+ARG TOMCAT_VERSION=9.0.107
+ARG JDK=jdk17
+FROM tomcat:${TOMCAT_VERSION}-${JDK}
 
 # Install some useful basic utilities
 RUN apt-get update && apt-get install -y nano procps htop dnsutils

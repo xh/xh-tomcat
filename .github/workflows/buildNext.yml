@@ -1,0 +1,59 @@
+name: Build next images
+
+# Builds and publishes the eight `next-*` xhio/xh-tomcat variants. These are
+# mutable, snapshot-style tags rebuilt on every push to develop and weekly so
+# they pick up upstream tomcat:9.0 / tomcat:10.1 base image patches.
+
+on:
+  push:
+    branches: [develop]
+  schedule:
+    # 01:00 UTC Thursday ≈ Wed 20:00 EST / 21:00 EDT.
+    # Approximates the prior TeamCity "Wednesday 20:00 America/New_York" trigger
+    # (GitHub Actions cron is UTC-only with no DST awareness).
+    - cron: '0 1 * * 4'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: buildNext-${{ matrix.tomcat-version }}-${{ matrix.jdk }}
+      cancel-in-progress: true
+    strategy:
+      fail-fast: false
+      # Cartesian product of supported Tomcat x JDK versions. Tomcat
+      # version is the floating major.minor tag (e.g. 9.0) so each build picks
+      # up the latest upstream patch automatically.
+      matrix:
+        tomcat-version: ["9.0", "10.1"]
+        jdk: [jdk11, jdk17, jdk21, jdk25]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Tag suffix preserves the legacy convention: bare `next-jdkXX` for the
+      # Tomcat 9.0 line, `next-tc10-jdkXX` for the Tomcat 10.1 line.
+      - name: Build and push image
+        env:
+          TOMCAT_VERSION: ${{ matrix.tomcat-version }}
+          JDK: ${{ matrix.jdk }}
+        run: |
+          if [ "$TOMCAT_VERSION" = "10.1" ]; then
+            TAG="xhio/xh-tomcat:next-tc10-$JDK"
+          else
+            TAG="xhio/xh-tomcat:next-$JDK"
+          fi
+          docker build --pull \
+            --build-arg TOMCAT_VERSION="$TOMCAT_VERSION" \
+            --build-arg JDK="$JDK" \
+            -t "$TAG" .
+          docker push "$TAG"
