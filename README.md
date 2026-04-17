@@ -21,7 +21,8 @@ with each other and build/publish with dedicated tags.
 | master-jdk17  |     17      | `X.Y.Z-jdk17`, `latest-jdk17`         |
 | develop-jdk11 |     11      | `next-jdk11`                          |
 | develop-jdk17 |     17      | `next-jdk17`                          |
-| develop-tc10-jdk17 |     17      | `next-tc10-jdk17`                          |
+| develop-tc10-jdk17 |     17      | `next-tc10-jdk17`                |
+| develop-tc10-jdk25 |     25      | `next-tc10-jdk25`                |
 
 ----
 📫☎️🌎 info@xh.io | https://xh.io/contact
