@@ -1,4 +1,4 @@
-FROM tomcat:10.1-jdk17
+FROM tomcat:10.1-jdk25
 
 # Install some useful basic utilities
 RUN apt-get update && apt-get install -y nano procps htop dnsutils
