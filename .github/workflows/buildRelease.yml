@@ -84,7 +84,7 @@ jobs:
         run: |
           docker build \
             --pull \
-            --build-arg JDK=${{ matrix.jdk }} \
+            --build-arg JDK_VERSION=${{ matrix.jdk }} \
             -t "$VERSION_TAG" \
             -t "$LATEST_TAG" \
             .

@@ -45,15 +45,15 @@ jobs:
       - name: Build and push image
         env:
           TOMCAT_VERSION: ${{ matrix.tomcat-version }}
-          JDK: ${{ matrix.jdk }}
+          JDK_VERSION: ${{ matrix.jdk }}
         run: |
           if [ "$TOMCAT_VERSION" = "10.1" ]; then
-            TAG="xhio/xh-tomcat:next-tc10-$JDK"
+            TAG="xhio/xh-tomcat:next-tc10-$JDK_VERSION"
           else
-            TAG="xhio/xh-tomcat:next-$JDK"
+            TAG="xhio/xh-tomcat:next-$JDK_VERSION"
           fi
           docker build --pull \
             --build-arg TOMCAT_VERSION="$TOMCAT_VERSION" \
-            --build-arg JDK="$JDK" \
+            --build-arg JDK_VERSION="$JDK_VERSION" \
             -t "$TAG" .
           docker push "$TAG"
