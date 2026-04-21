@@ -1,8 +1,8 @@
 name: Build next images
 
-# Builds and publishes the eight `next-*` xhio/xh-tomcat variants. These are
-# mutable, snapshot-style tags rebuilt on every push to develop and weekly so
-# they pick up upstream tomcat:9.0 / tomcat:10.1 base image patches.
+# Publishes the `next-*` xhio/xh-tomcat snapshot tags. Rebuilt on every push
+# to develop and weekly so they pick up upstream base image patches. See
+# README / CHANGELOG for the currently supported Tomcat + JDK matrix.
 
 on:
   push:
@@ -21,16 +21,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     concurrency:
-      group: buildNext-${{ matrix.tomcat-version }}-${{ matrix.jdk }}
+      group: buildNext-${{ matrix.tomcat.tag-prefix }}-${{ matrix.jdk }}
       cancel-in-progress: true
     strategy:
       fail-fast: false
-      # Cartesian product of supported Tomcat x JDK versions. Tomcat
-      # version is the floating major.minor tag (e.g. 9.0) so each build picks
-      # up the latest upstream patch automatically.
+      # Supported variants: cross-product of the Tomcat lines and JDK versions
+      # listed below. Each `tomcat` entry uses the floating major.minor base
+      # tag so runs pick up the latest upstream patch automatically, and is
+      # published as `next-<tag-prefix>-jdkXX`. Add more entries to extend.
       matrix:
-        tomcat-version: ["9.0", "10.1"]
-        jdk: [jdk11, jdk17, jdk21, jdk25]
+        tomcat:
+          - { version: "10.1", tag-prefix: tc10 }
+        jdk: [jdk17, jdk25]
     steps:
       - uses: actions/checkout@v4
 
@@ -40,18 +42,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Tag suffix preserves the legacy convention: bare `next-jdkXX` for the
-      # Tomcat 9.0 line, `next-tc10-jdkXX` for the Tomcat 10.1 line.
       - name: Build and push image
         env:
-          TOMCAT_VERSION: ${{ matrix.tomcat-version }}
+          TOMCAT_VERSION: ${{ matrix.tomcat.version }}
+          TAG_PREFIX: ${{ matrix.tomcat.tag-prefix }}
           JDK_VERSION: ${{ matrix.jdk }}
         run: |
-          if [ "$TOMCAT_VERSION" = "10.1" ]; then
-            TAG="xhio/xh-tomcat:next-tc10-$JDK_VERSION"
-          else
-            TAG="xhio/xh-tomcat:next-$JDK_VERSION"
-          fi
+          TAG="xhio/xh-tomcat:next-$TAG_PREFIX-$JDK_VERSION"
           docker build --pull \
             --build-arg TOMCAT_VERSION="$TOMCAT_VERSION" \
             --build-arg JDK_VERSION="$JDK_VERSION" \
