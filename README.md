@@ -29,13 +29,13 @@ to the most recent release of that pair.
 
 ## Branches and CI
 
-This repo uses a single `develop` branch (and a `main` branch tracking the most recent release).
+This repo uses a single `develop` branch (and a `master` branch tracking the most recent release).
 
 GitHub Actions workflows live in [`.github/workflows/`](./.github/workflows):
 
 - **`buildNext.yml`** — runs on every push to `develop`, on a weekly schedule, and on manual dispatch. Builds and
   pushes all `next-*` variants in parallel via a matrix.
-- **`buildRelease.yml`** — manual dispatch from `main` only. Takes a semver release version as input. The locked
+- **`buildRelease.yml`** — manual dispatch from `master` only. Takes a semver release version as input. The locked
   Tomcat patch version is pinned in the workflow's build matrix (with the [`Dockerfile`](./Dockerfile)
   `TOMCAT_VERSION` ARG default kept in sync for local builds). Builds and pushes the `release-*` variants with
   both `latest-tcXX-jdkYY` and `<xh-release>-tcXX-jdkYY` tags, then creates the corresponding git tag and GitHub
