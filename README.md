@@ -8,10 +8,9 @@ deployments with additional configurations.
 
 ## Tomcat versions, JDK versions and Docker tags
 
- Images are published to Docker Hub as [`xhio/xh-tomcat`](https://hub.docker.com/r/xhio/xh-tomcat). We support
-Tomcat `10.1` on JDK 17 and JDK 25, producing the variants below. In the table and prose, `<tomcat-patch>` is the
-pinned upstream Tomcat patch version (e.g. `10.1.54`) and `<xh-release>` is the xh-tomcat semver release from
-`CHANGELOG.md` (e.g. `4.0.0`).
+ Images are published to Docker Hub as [`xhio/xh-tomcat`](https://hub.docker.com/r/xhio/xh-tomcat), producing the
+variants below. In the table and prose, `<tomcat-patch>` is the pinned upstream Tomcat patch version and
+`<xh-release>` is the xh-tomcat semver release from `CHANGELOG.md`.
 
 | Variant            | Tomcat | JDK | Source base image             | Docker tag(s)                                    |
 |--------------------|:------:|:---:|-------------------------------|--------------------------------------------------|
@@ -20,12 +19,12 @@ pinned upstream Tomcat patch version (e.g. `10.1.54`) and `<xh-release>` is the 
 | release-tc10-jdk17 |  10.1  | 17  | `tomcat:<tomcat-patch>-jdk17` | `latest-tc10-jdk17`, `<xh-release>-tc10-jdk17`   |
 | release-tc10-jdk25 |  10.1  | 25  | `tomcat:<tomcat-patch>-jdk25` | `latest-tc10-jdk25`, `<xh-release>-tc10-jdk25`   |
 
-`next-*` tags are fully mutable and rebuilt on every commit to `develop` and on a weekly schedule (Wednesday 20:00
-ET) so they pick up upstream patches to the floating `tomcat:10.1` base image. They are intended for testing and
-snapshot-style deployments.
+`next-*` tags are fully mutable. Every `next-tcXX-jdkYY` variant is rebuilt on every commit to `develop` and on a weekly
+schedule (Wednesday ~20:00 ET) so they pick up upstream patches to the floating Tomcat base images. They are intended for 
+testing and snapshot-style deployments.
 
-`release-*` builds publish two tags per (Tomcat line, JDK) pair: an immutable `<xh-release>-tc10-jdkXX` tag pinned to
-a specific xh-tomcat semver release (recorded in `CHANGELOG.md`) and a mutable `latest-tc10-jdkXX` tag that floats
+`release-*` builds publish two tags per (Tomcat line, JDK) pair: an immutable `<xh-release>-tcXX-jdkYY` tag pinned to
+a specific xh-tomcat semver release (recorded in `CHANGELOG.md`) and a mutable `latest-tcXX-jdkYY` tag that floats
 to the most recent release of that pair.
 
 ## Branches and CI
@@ -39,7 +38,7 @@ GitHub Actions workflows live in [`.github/workflows/`](./.github/workflows):
 - **`buildRelease.yml`** — manual dispatch from `main` only. Takes a semver release version as input. The locked
   Tomcat patch version is pinned in the workflow's build matrix (with the [`Dockerfile`](./Dockerfile)
   `TOMCAT_VERSION` ARG default kept in sync for local builds). Builds and pushes the `release-*` variants with
-  both `latest-tc10-jdkXX` and `<xh-release>-tc10-jdkXX` tags, then creates the corresponding git tag and GitHub
+  both `latest-tcXX-jdkYY` and `<xh-release>-tcXX-jdkYY` tags, then creates the corresponding git tag and GitHub
   release. To release with a newer Tomcat patch, bump the matrix entry (and the Dockerfile default) and update
   `CHANGELOG.md` in a normal PR before dispatching the workflow.
 
