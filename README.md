@@ -9,15 +9,14 @@ deployments with additional configurations.
 ## Tomcat versions, JDK versions and Docker tags
 
  Images are published to Docker Hub as [`xhio/xh-tomcat`](https://hub.docker.com/r/xhio/xh-tomcat), producing the
-variants below. In the table and prose, `<tomcat-patch>` is the pinned upstream Tomcat patch version and
-`<xh-release>` is the xh-tomcat semver release from `CHANGELOG.md`.
+variants below.
 
-| Variant            | Tomcat | JDK | Source base image             | Docker tag(s)                                    |
-|--------------------|:------:|:---:|-------------------------------|--------------------------------------------------|
-| next-tc10-jdk17    |  10.1  | 17  | `tomcat:10.1-jdk17`           | `next-tc10-jdk17`                                |
-| next-tc10-jdk25    |  10.1  | 25  | `tomcat:10.1-jdk25`           | `next-tc10-jdk25`                                |
-| release-tc10-jdk17 |  10.1  | 17  | `tomcat:<tomcat-patch>-jdk17` | `latest-tc10-jdk17`, `<xh-release>-tc10-jdk17`   |
-| release-tc10-jdk25 |  10.1  | 25  | `tomcat:<tomcat-patch>-jdk25` | `latest-tc10-jdk25`, `<xh-release>-tc10-jdk25`   |
+| Variant            | Tomcat | JDK | Source base image       | Docker tag(s)                              |
+|--------------------|:------:|:---:|-------------------------|--------------------------------------------|
+| next-tc10-jdk17    |  10.1  | 17  | `tomcat:10.1-jdk17`     | `next-tc10-jdk17`                          |
+| next-tc10-jdk25    |  10.1  | 25  | `tomcat:10.1-jdk25`     | `next-tc10-jdk25`                          |
+| release-tc10-jdk17 | 10.1.54 | 17 | `tomcat:10.1.54-jdk17`  | `latest-tc10-jdk17`, `4.0.0-tc10-jdk17`    |
+| release-tc10-jdk25 | 10.1.54 | 25 | `tomcat:10.1.54-jdk25`  | `latest-tc10-jdk25`, `4.0.0-tc10-jdk25`    |
 
 `next-*` tags are fully mutable. Every `next-tcXX-jdkYY` variant is rebuilt on every commit to `develop` and on a weekly
 schedule (Wednesday ~20:00 ET) so they pick up upstream patches to the floating Tomcat base images. They are intended for 
