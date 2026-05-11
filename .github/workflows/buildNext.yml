@@ -1,4 +1,4 @@
-name: Build next images
+name: Build Next
 
 # Publishes the `next-*` xhio/xh-tomcat snapshot tags. Rebuilt on every push
 # to develop and weekly so they pick up upstream base image patches. See
