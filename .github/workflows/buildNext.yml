@@ -32,7 +32,7 @@ jobs:
       matrix:
         tomcat:
           - { version: "10.1", tag-prefix: tc10 }
-        jdk: [jdk17, jdk25]
+        jdk: [jdk17, jdk21, jdk25]
     steps:
       - uses: actions/checkout@v6
 

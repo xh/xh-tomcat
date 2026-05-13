@@ -11,18 +11,24 @@ See this project's README for details on how images are tagged for use with diff
 
 ## next - under development
 
-* Tomcat `10.1` tags (`next-tc10-jdk17`, `next-tc10-jdk25`)
+* Tomcat `10.1` tags (`next-tc10-jdk17`, `next-tc10-jdk21`, `next-tc10-jdk25`)
+
+## 4.1.0 - 2026-05-13
+
+* Tomcat `10.1.55`.
+* Builds will now pull latest Ubuntu security patches.
+* Removed "basic utilities" from build - nano procps htop dnsutils - deemed no longer necessary.
+* Added `release-tc10-jdk21` tags (`latest-tc10-jdk21`, `4.1.0-tc10-jdk21`).
 
 ## 4.0.0 - 2026-05-07
 
-* Added `release-tc10-jdk17` tags (`latest-tc10-jdk17`, `4.0.0-tc10-jdk25`).
+* Added `release-tc10-jdk17` tags (`latest-tc10-jdk17`, `4.0.0-tc10-jdk17`).
 * Added `release-tc10-jdk25` tags (`latest-tc10-jdk25`, `4.0.0-tc10-jdk25`).
 * Tomcat `10.1.54`.
 
 ### 💥 Breaking Changes
-* Dropped support for Tomcat `9.0` and JDK 11. Going forward, xh-tomcat only publishes images for Tomcat `10.1` 
-  on JDK 17 and JDK 25. Apps still on the dropped versions should pin to a `3.x` release tag (e.g. `3.2.0-jdk11`) 
-  until they are ready to migrate.
+* Dropped support for Tomcat `9.0` and JDK 11. Apps still on the dropped versions should pin to a `3.x` release tag 
+  (e.g. `3.2.0-jdk11`) until they are ready to migrate.
 * Release tag scheme changed to now always include a Tomcat-line segment. Tags are now published as `latest-tcXX-jdkYY` 
   and `<xh-release>-tcXX-jdkYY` (e.g. `latest-tc10-jdk17`, `4.0.0-tc10-jdk17`) instead of the previous `latest-jdkXX` 
   / `<xh-release>-jdkXX` implied to be on Tomcat `9.0`. Apps pulling `latest-jdk17` will need to switch to Tomcat 10.1
