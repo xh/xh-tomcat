@@ -3,10 +3,9 @@ ARG TOMCAT_VERSION=10.1.55
 ARG JDK_VERSION=jdk17
 FROM tomcat:${TOMCAT_VERSION}-${JDK_VERSION}
 
-# Upgrade patches, install some useful basic utilities, delete the cache.
+# Upgrade to get latest security patches, delete apt cache.
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y nano procps htop dnsutils && \
     rm -rf /var/lib/apt/lists/*
 
 # Clean up standard bundled webapps.
