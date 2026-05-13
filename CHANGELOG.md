@@ -13,6 +13,11 @@ See this project's README for details on how images are tagged for use with diff
 
 * Tomcat `10.1` tags (`next-tc10-jdk17`, `next-tc10-jdk25`)
 
+## 4.0.1 - 2026-05-13
+
+* Tomcat `10.1.55`.
+* Builds will now pull latest Ubuntu security patches.
+
 ## 4.0.0 - 2026-05-07
 
 * Added `release-tc10-jdk17` tags (`latest-tc10-jdk17`, `4.0.0-tc10-jdk25`).

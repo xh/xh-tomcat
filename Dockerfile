@@ -1,12 +1,15 @@
 # See buildRelease for complete matrix of published TOMCAT_VERSION and JDK_VERSION.
-ARG TOMCAT_VERSION=10.1.54
+ARG TOMCAT_VERSION=10.1.55
 ARG JDK_VERSION=jdk17
 FROM tomcat:${TOMCAT_VERSION}-${JDK_VERSION}
 
-# Install some useful basic utilities
-RUN apt-get update && apt-get install -y nano procps htop dnsutils
+# Upgrade patches, install some useful basic utilities, delete the cache.
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y nano procps htop dnsutils && \
+    rm -rf /var/lib/apt/lists/*
 
-# Clean up standard bundled webapps
+# Clean up standard bundled webapps.
 RUN cd webapps && \
   rm -rf ROOT* && \
   rm -rf docs && \
