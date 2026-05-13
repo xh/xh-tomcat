@@ -68,8 +68,8 @@ jobs:
       # kept in sync with the current entry for local `docker build` use.
       matrix:
         tomcat:
-          - { version: "10.1.54", tag-prefix: tc10 }
-        jdk: [jdk17, jdk25]
+          - { version: "10.1.55", tag-prefix: tc10 }
+        jdk: [jdk17, jdk21, jdk25]
 
     steps:
       - uses: actions/checkout@v6

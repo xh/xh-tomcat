@@ -11,12 +11,14 @@ deployments with additional configurations.
  Images are published to Docker Hub as [`xhio/xh-tomcat`](https://hub.docker.com/r/xhio/xh-tomcat), producing the
 variants below.
 
-| Variant            | Tomcat  | JDK | Source base image       | Docker tag(s)                              |
-|--------------------|:-------:|:---:|-------------------------|--------------------------------------------|
-| next-tc10-jdk17    |  10.1   | 17  | `tomcat:10.1-jdk17`     | `next-tc10-jdk17`                          |
-| next-tc10-jdk25    |  10.1   | 25  | `tomcat:10.1-jdk25`     | `next-tc10-jdk25`                          |
-| release-tc10-jdk17 | 10.1.54 | 17  | `tomcat:10.1.54-jdk17`  | `latest-tc10-jdk17`, `4.0.0-tc10-jdk17`    |
-| release-tc10-jdk25 | 10.1.54 | 25  | `tomcat:10.1.54-jdk25`  | `latest-tc10-jdk25`, `4.0.0-tc10-jdk25`    |
+| Variant            | Tomcat  | JDK | Source base image      | Docker tag(s)                           |
+|--------------------|:-------:|:---:|------------------------|-----------------------------------------|
+| next-tc10-jdk17    |  10.1   | 17  | `tomcat:10.1-jdk17`    | `next-tc10-jdk17`                       |
+| next-tc10-jdk21    |  10.1   | 21  | `tomcat:10.1-jdk21`    | `next-tc10-jdk21`                       |
+| next-tc10-jdk25    |  10.1   | 25  | `tomcat:10.1-jdk25`    | `next-tc10-jdk25`                       |
+| release-tc10-jdk17 | 10.1.55 | 17  | `tomcat:10.1.55-jdk17` | `latest-tc10-jdk17`, `4.1.0-tc10-jdk17` |
+| release-tc10-jdk21 | 10.1.55 | 21  | `tomcat:10.1.55-jdk21` | `latest-tc10-jdk21`, `4.1.0-tc10-jdk21` |
+| release-tc10-jdk25 | 10.1.55 | 25  | `tomcat:10.1.55-jdk25` | `latest-tc10-jdk25`, `4.1.0-tc10-jdk25` |
 
 `next-*` tags are fully mutable. Every variant is rebuilt on every commit to `develop` and on a weekly schedule 
 (Wednesday ~20:00 ET) so they pick up upstream patches to the floating Tomcat base images. They are intended for 
