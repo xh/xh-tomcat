@@ -34,7 +34,7 @@ jobs:
           - { version: "10.1", tag-prefix: tc10 }
         jdk: [jdk17, jdk21, jdk25]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v4
