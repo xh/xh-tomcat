@@ -3,6 +3,9 @@ ARG TOMCAT_VERSION=10.1.55
 ARG JDK_VERSION=jdk17
 FROM tomcat:${TOMCAT_VERSION}-${JDK_VERSION}
 
+# Tomcat line (e.g. tc10, tc11) matching TOMCAT_VERSION - selects the server.xml under conf/.
+ARG TOMCAT_LINE=tc10
+
 # Upgrade to get latest security patches, delete apt cache.
 RUN apt-get update && \
     apt-get upgrade -y && \
@@ -16,6 +19,7 @@ RUN cd webapps && \
   rm -rf manager && \
   rm -rf host-manager
 
-# Copy in customized server.xml - look for <!-- XH CUSTOMIZATION ... --> comments.
-# Note - this should be compared and updated as needed across Tomcat versions - current as of 10.1.54.
-COPY conf/server.xml /usr/local/tomcat/conf/
+# Copy in customized server.xml for the Tomcat line - look for <!-- XH CUSTOMIZATION ... --> comments.
+# Note - each should be compared and updated as needed across Tomcat versions - conf/tc10 is current
+# as of 10.1.54, conf/tc11 as of 11.0.26.
+COPY conf/${TOMCAT_LINE}/server.xml /usr/local/tomcat/conf/
