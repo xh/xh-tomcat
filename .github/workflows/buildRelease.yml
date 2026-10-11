@@ -65,11 +65,15 @@ jobs:
       # versions listed below. Each `tomcat` entry pins an exact patch and a
       # `tag-prefix` used in the published Docker tag (e.g. `tc10`). Add more
       # entries to extend. The Dockerfile's TOMCAT_VERSION ARG default is
-      # kept in sync with the current entry for local `docker build` use.
+      # kept in sync with the tc10 entry for local `docker build` use. Tomcat 11 is not built for
+      # JDK 17, as the Hoist apps it serves (Grails 8+) require JDK 21+.
       matrix:
         tomcat:
           - { version: "10.1.55", tag-prefix: tc10 }
+          - { version: "11.0.26", tag-prefix: tc11 }
         jdk: [jdk17, jdk21, jdk25]
+        exclude:
+          - { tomcat: { version: "11.0.26", tag-prefix: tc11 }, jdk: jdk17 }
 
     steps:
       - uses: actions/checkout@v6
@@ -89,6 +93,7 @@ jobs:
             --pull \
             --build-arg TOMCAT_VERSION=${{ matrix.tomcat.version }} \
             --build-arg JDK_VERSION=${{ matrix.jdk }} \
+            --build-arg TOMCAT_LINE=${{ matrix.tomcat.tag-prefix }} \
             -t "$VERSION_TAG" \
             -t "$LATEST_TAG" \
             .
