@@ -69,11 +69,11 @@ jobs:
       # JDK 17, as the Hoist apps it serves (Grails 8+) require JDK 21+.
       matrix:
         tomcat:
-          - { version: "10.1.55", tag-prefix: tc10 }
-          - { version: "11.0.26", tag-prefix: tc11 }
+          - { version: "10.1.61", tag-prefix: tc10 }
+          - { version: "11.0.27", tag-prefix: tc11 }
         jdk: [jdk17, jdk21, jdk25]
         exclude:
-          - { tomcat: { version: "11.0.26", tag-prefix: tc11 }, jdk: jdk17 }
+          - { tomcat: { version: "11.0.27", tag-prefix: tc11 }, jdk: jdk17 }
 
     steps:
       - uses: actions/checkout@v6
