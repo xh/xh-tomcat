@@ -1,5 +1,5 @@
 # See buildRelease for complete matrix of published TOMCAT_VERSION and JDK_VERSION.
-ARG TOMCAT_VERSION=10.1.55
+ARG TOMCAT_VERSION=10.1.61
 ARG JDK_VERSION=jdk17
 FROM tomcat:${TOMCAT_VERSION}-${JDK_VERSION}
 
@@ -21,5 +21,5 @@ RUN cd webapps && \
 
 # Copy in customized server.xml for the Tomcat line - look for <!-- XH CUSTOMIZATION ... --> comments.
 # Note - each should be compared and updated as needed across Tomcat versions - conf/tc10 is current
-# as of 10.1.54, conf/tc11 as of 11.0.26.
+# as of 10.1.61, conf/tc11 as of 11.0.27.
 COPY conf/${TOMCAT_LINE}/server.xml /usr/local/tomcat/conf/
