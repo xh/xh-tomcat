@@ -12,8 +12,10 @@ See this project's README for details on how images are tagged for use with diff
 ## next - under development
 
 * Tomcat `10.1` tags (`next-tc10-jdk17`, `next-tc10-jdk21`, `next-tc10-jdk25`)
+* Release builds pinned to Tomcat `10.1.62` and `11.0.29`, picking up fixes for CVE-2026-65905, CVE-2026-65182, and
+  CVE-2026-68525 and base images with the latest Temurin JDK security releases (`17.0.21`, `21.0.13`, `25.0.5`).
 * Added Tomcat `11.0` tags (`next-tc11-jdk21`, `next-tc11-jdk25`), required by Hoist apps on Grails 8+. Release builds
-  will add `release-tc11-jdk21` and `release-tc11-jdk25` on Tomcat `11.0.26`. Not built for JDK 17.
+  will add `release-tc11-jdk21` and `release-tc11-jdk25` on Tomcat `11.0.29`. Not built for JDK 17.
 * Moved `conf/server.xml` to `conf/tc10/server.xml` and added `conf/tc11/server.xml`, taken from Tomcat `11.0.26`'s
   default with the same XH customizations. The Dockerfile selects one via the new `TOMCAT_LINE` build arg (default
   `tc10`).
