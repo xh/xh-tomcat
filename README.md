@@ -65,10 +65,14 @@ GitHub Actions workflows live in [`.github/workflows/`](./.github/workflows):
   pushes all `next-*` variants in parallel, each on its floating `major.minor` Tomcat base image.
 - **`buildRelease.yml`** - manual dispatch from `master` only. Takes a semver release version as input. Builds and
   pushes the `release-*` variants with both tags, then creates the corresponding git tag and GitHub release.
+- **`checkTomcat.yml`** - runs daily. Opens a PR to `develop` when upstream publishes a newer Tomcat patch on a line
+  we track, with the CVEs it fixes. Opens an issue for a newer Tomcat line or LTS JDK, and when `develop` has gone 45
+  days without a commit, before GitHub disables scheduled workflows at 60. PRs and issues come from the XH Build Bot.
+  Manual dispatch has a dry-run option.
 
 The Tomcat lines, their pinned patch versions and their JDKs live in [`tomcat-versions.json`](./tomcat-versions.json).
-Both workflows build their matrix from it. To release with a newer Tomcat patch, bump the version there, update the
-table above and `CHANGELOG.md` in a normal PR, then dispatch the release.
+Both build workflows read their matrix from it. To release a newer Tomcat patch, merge the Check Tomcat PR (or make
+the same edits by hand), merge `develop` to `master`, then dispatch the release.
 
 Both workflows build each image with [`.github/scripts/build-image.sh`](./.github/scripts/build-image.sh). It runs
 [`smoke-test.sh`](./.github/scripts/smoke-test.sh) on the image before pushing it, which checks the Tomcat and JDK

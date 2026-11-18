@@ -1,0 +1,58 @@
+name: Check Tomcat
+
+# Daily check for updates to the Tomcat versions pinned in tomcat-versions.json. Opens a PR to
+# develop for newer patches on the pinned lines, an issue for a newer Tomcat line or LTS JDK,
+# and an issue if develop has been idle long enough that GitHub may disable scheduled workflows.
+# See .github/scripts/check-tomcat.sh for details.
+#
+# Branches, PRs and issues all come from the org's XH Build Bot GitHub App. Its credentials are
+# the org-level XH_BUILD_BOT_CLIENT_ID variable and XH_BUILD_BOT_PRIVATE_KEY secret.
+
+on:
+  schedule:
+    # 13:23 UTC daily. Off the top of the hour, when GitHub notes scheduled runs can be delayed.
+    - cron: '23 13 * * *'
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: 'Dry run. Log what would happen, and check the bot can push, without changing anything.'
+        type: boolean
+        default: false
+      pinned-override:
+        description: 'Test only. Treat these versions as pinned (e.g. "tc10=10.1.60 tc11=11.0.27"). Use with dry run.'
+        type: string
+        default: ''
+
+# The workflow's own token is unused. The bot token covers everything.
+permissions: {}
+
+concurrency:
+  group: checkTomcat
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mint XH Build Bot token
+        id: bot-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.XH_BUILD_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.XH_BUILD_BOT_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-issues: write
+
+      - uses: actions/checkout@v7
+        with:
+          ref: develop
+          # Push the bump branch as the bot.
+          token: ${{ steps.bot-token.outputs.token }}
+
+      - name: Check for Tomcat updates
+        env:
+          GH_TOKEN: ${{ steps.bot-token.outputs.token }}
+          DRY_RUN: ${{ inputs.dry-run && '1' || '0' }}
+          PINNED_OVERRIDE: ${{ inputs.pinned-override }}
+        run: .github/scripts/check-tomcat.sh
