@@ -1,8 +1,8 @@
 name: Build Next
 
 # Publishes the `next-*` xhio/xh-tomcat snapshot tags. Rebuilt on every push
-# to develop and weekly so they pick up upstream base image patches. See
-# README / CHANGELOG for the currently supported Tomcat + JDK matrix.
+# to develop and weekly so they pick up upstream base image patches. The
+# Tomcat lines and JDKs come from tomcat-versions.json.
 
 on:
   push:
@@ -18,25 +18,30 @@ permissions:
   contents: read
 
 jobs:
+  # Reads the Tomcat lines and JDKs from tomcat-versions.json. Each line builds on its floating
+  # major.minor base tag (e.g. `tomcat:10.1-jdk17`), so runs pick up the latest upstream patch.
+  matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      include: ${{ steps.read.outputs.include }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: read
+        run: |
+          INCLUDE=$(jq -c '[.[] | {line, version: (.version | split(".")[0:2] | join(".")), jdk: .jdks[]}]' tomcat-versions.json)
+          echo "include=$INCLUDE" >> "$GITHUB_OUTPUT"
+
   build:
+    needs: matrix
+    name: build (${{ matrix.line }}, ${{ matrix.jdk }})
     runs-on: ubuntu-latest
     concurrency:
-      group: buildNext-${{ matrix.tomcat.tag-prefix }}-${{ matrix.jdk }}
+      group: buildNext-${{ matrix.line }}-${{ matrix.jdk }}
       cancel-in-progress: true
     strategy:
       fail-fast: false
-      # Supported variants: cross-product of the Tomcat lines and JDK versions
-      # listed below. Each `tomcat` entry uses the floating major.minor base
-      # tag so runs pick up the latest upstream patch automatically, and is
-      # published as `next-<tag-prefix>-jdkXX`. Add more entries to extend.
-      # Tomcat 11 is not built for JDK 17, as the Hoist apps it serves (Grails 8+) require JDK 21+.
       matrix:
-        tomcat:
-          - { version: "10.1", tag-prefix: tc10 }
-          - { version: "11.0", tag-prefix: tc11 }
-        jdk: [jdk17, jdk21, jdk25]
-        exclude:
-          - { tomcat: { version: "11.0", tag-prefix: tc11 }, jdk: jdk17 }
+        include: ${{ fromJSON(needs.matrix.outputs.include) }}
     steps:
       - uses: actions/checkout@v7
 
@@ -46,17 +51,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # A buildx builder (docker-container driver) is required to attach attestations.
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
       - name: Build, test and push image
-        env:
-          TOMCAT_VERSION: ${{ matrix.tomcat.version }}
-          TAG_PREFIX: ${{ matrix.tomcat.tag-prefix }}
-          JDK_VERSION: ${{ matrix.jdk }}
         run: |
-          TAG="xhio/xh-tomcat:next-$TAG_PREFIX-$JDK_VERSION"
-          docker build --pull \
-            --build-arg TOMCAT_VERSION="$TOMCAT_VERSION" \
-            --build-arg JDK_VERSION="$JDK_VERSION" \
-            --build-arg TOMCAT_LINE="$TAG_PREFIX" \
-            -t "$TAG" .
-          .github/scripts/smoke-test.sh "$TAG" "$TOMCAT_VERSION" "$JDK_VERSION" "$TAG_PREFIX"
-          docker push "$TAG"
+          .github/scripts/build-image.sh "${{ matrix.version }}" "${{ matrix.jdk }}" "${{ matrix.line }}" \
+            "xhio/xh-tomcat:next-${{ matrix.line }}-${{ matrix.jdk }}"

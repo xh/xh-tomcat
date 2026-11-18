@@ -1,5 +1,6 @@
-# See buildRelease for complete matrix of published TOMCAT_VERSION and JDK_VERSION.
-ARG TOMCAT_VERSION=10.1.62
+# CI passes all three args. Pinned release versions and JDKs live in tomcat-versions.json.
+# The defaults here build the floating Tomcat 10.1 line for local use.
+ARG TOMCAT_VERSION=10.1
 ARG JDK_VERSION=jdk17
 FROM tomcat:${TOMCAT_VERSION}-${JDK_VERSION}
 

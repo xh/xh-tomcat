@@ -1,0 +1,4 @@
+[
+  { "line": "tc10", "version": "10.1.62", "jdks": ["jdk17", "jdk21", "jdk25"] },
+  { "line": "tc11", "version": "11.0.29", "jdks": ["jdk21", "jdk25"] }
+]

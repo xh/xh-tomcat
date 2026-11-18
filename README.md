@@ -62,15 +62,25 @@ This repo uses a single `develop` branch (and a `master` branch tracking the mos
 GitHub Actions workflows live in [`.github/workflows/`](./.github/workflows):
 
 - **`buildNext.yml`** - runs on every push to `develop`, on a weekly schedule, and on manual dispatch. Builds and
-  pushes all `next-*` variants in parallel via a matrix.
-- **`buildRelease.yml`** - manual dispatch from `master` only. Takes a semver release version as input. The locked
-  Tomcat patch version is pinned in the workflow's build matrix (with the [`Dockerfile`](./Dockerfile)
-  `TOMCAT_VERSION` ARG default kept in sync for local builds). Builds and pushes the `release-*` variants with both 
-  tags, then creates the corresponding git tag and GitHub release. To release with a newer Tomcat patch, bump the 
-  matrix entry (and the Dockerfile default) and update `CHANGELOG.md` in a normal PR before dispatching the workflow.
+  pushes all `next-*` variants in parallel, each on its floating `major.minor` Tomcat base image.
+- **`buildRelease.yml`** - manual dispatch from `master` only. Takes a semver release version as input. Builds and
+  pushes the `release-*` variants with both tags, then creates the corresponding git tag and GitHub release.
 
-Both workflows run [`.github/scripts/smoke-test.sh`](./.github/scripts/smoke-test.sh) on each image before pushing it.
-It checks the Tomcat and JDK versions and the XH config, then boots Tomcat and checks it serves a test app.
+The Tomcat lines, their pinned patch versions and their JDKs live in [`tomcat-versions.json`](./tomcat-versions.json).
+Both workflows build their matrix from it. To release with a newer Tomcat patch, bump the version there, update the
+table above and `CHANGELOG.md` in a normal PR, then dispatch the release.
+
+Both workflows build each image with [`.github/scripts/build-image.sh`](./.github/scripts/build-image.sh). It runs
+[`smoke-test.sh`](./.github/scripts/smoke-test.sh) on the image before pushing it, which checks the Tomcat and JDK
+versions and the XH config, then boots Tomcat and checks it serves a test app. Pushed images carry SBOM and provenance
+attestations.
+
+To build locally, pass the same args CI does:
+
+```sh
+docker build --build-arg TOMCAT_VERSION=11.0 --build-arg JDK_VERSION=jdk25 --build-arg TOMCAT_LINE=tc11 -t xh-tomcat-local .
+.github/scripts/smoke-test.sh xh-tomcat-local 11.0 jdk25 tc11
+```
 
 ----
 📫☎️🌎 info@xh.io | https://xh.io/contact

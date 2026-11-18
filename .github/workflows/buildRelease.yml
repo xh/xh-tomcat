@@ -2,15 +2,15 @@ name: Build Release
 
 # Publishes a numbered xhio/xh-tomcat release. Manually triggered from master
 # (or a hotfix branch). Validates the release version, builds the release
-# variants in parallel against the pinned Tomcat patch versions in the matrix
-# below, pushes to Docker Hub with both the immutable
-# <xh-release>-<tag-prefix>-jdkXX tag and the floating latest-<tag-prefix>-jdkXX
-# tag, then tags the commit and creates a GitHub release.
-# See README / CHANGELOG for the currently supported Tomcat + JDK matrix.
+# variants in parallel against the pinned Tomcat patch versions in
+# tomcat-versions.json, pushes to Docker Hub with both the immutable
+# <xh-release>-<line>-jdkXX tag and the floating latest-<line>-jdkXX tag,
+# then tags the commit and creates a GitHub release.
 #
-# To release with a newer Tomcat patch: bump the `tomcat` entry in the matrix
-# below (and keep the Dockerfile TOMCAT_VERSION ARG default in sync), update
-# CHANGELOG.md in a normal PR, merge to master, then dispatch this workflow.
+# To release with a newer Tomcat patch: bump the version in
+# tomcat-versions.json, update CHANGELOG.md and the README table, merge to
+# master, then dispatch this workflow. The Check Tomcat workflow opens a PR
+# with these changes when upstream publishes a new patch.
 
 on:
   workflow_dispatch:
@@ -53,27 +53,31 @@ jobs:
           version: ${{ inputs.version }}
           is-hotfix: ${{ inputs.is-hotfix }}
 
-  build:
+  # Reads the pinned Tomcat patch versions and JDKs from tomcat-versions.json.
+  matrix:
     needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      include: ${{ steps.read.outputs.include }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: read
+        run: |
+          INCLUDE=$(jq -c '[.[] | {line, version, jdk: .jdks[]}]' tomcat-versions.json)
+          echo "include=$INCLUDE" >> "$GITHUB_OUTPUT"
 
+  build:
+    needs: matrix
+    name: build (${{ matrix.version }}, ${{ matrix.line }}, ${{ matrix.jdk }})
     runs-on: ubuntu-latest
     permissions:
       contents: read
     strategy:
       fail-fast: false
-      # Supported release variants: cross-product of the Tomcat lines and JDK
-      # versions listed below. Each `tomcat` entry pins an exact patch and a
-      # `tag-prefix` used in the published Docker tag (e.g. `tc10`). Add more
-      # entries to extend. The Dockerfile's TOMCAT_VERSION ARG default is
-      # kept in sync with the tc10 entry for local `docker build` use. Tomcat 11 is not built for
-      # JDK 17, as the Hoist apps it serves (Grails 8+) require JDK 21+.
       matrix:
-        tomcat:
-          - { version: "10.1.62", tag-prefix: tc10 }
-          - { version: "11.0.29", tag-prefix: tc11 }
-        jdk: [jdk17, jdk21, jdk25]
-        exclude:
-          - { tomcat: { version: "11.0.29", tag-prefix: tc11 }, jdk: jdk17 }
+        include: ${{ fromJSON(needs.matrix.outputs.include) }}
 
     steps:
       - uses: actions/checkout@v7
@@ -84,22 +88,17 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # A buildx builder (docker-container driver) is required to attach attestations.
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
       - name: Build, test and push image
         env:
-          VERSION_TAG: xhio/xh-tomcat:${{ inputs.version }}-${{ matrix.tomcat.tag-prefix }}-${{ matrix.jdk }}
-          LATEST_TAG: xhio/xh-tomcat:latest-${{ matrix.tomcat.tag-prefix }}-${{ matrix.jdk }}
+          VERSION_TAG: xhio/xh-tomcat:${{ inputs.version }}-${{ matrix.line }}-${{ matrix.jdk }}
+          LATEST_TAG: xhio/xh-tomcat:latest-${{ matrix.line }}-${{ matrix.jdk }}
         run: |
-          docker build \
-            --pull \
-            --build-arg TOMCAT_VERSION=${{ matrix.tomcat.version }} \
-            --build-arg JDK_VERSION=${{ matrix.jdk }} \
-            --build-arg TOMCAT_LINE=${{ matrix.tomcat.tag-prefix }} \
-            -t "$VERSION_TAG" \
-            -t "$LATEST_TAG" \
-            .
-          .github/scripts/smoke-test.sh "$VERSION_TAG" ${{ matrix.tomcat.version }} ${{ matrix.jdk }} ${{ matrix.tomcat.tag-prefix }}
-          docker push "$VERSION_TAG"
-          docker push "$LATEST_TAG"
+          .github/scripts/build-image.sh "${{ matrix.version }}" "${{ matrix.jdk }}" "${{ matrix.line }}" \
+            "$VERSION_TAG" "$LATEST_TAG"
 
   release:
     needs: build
