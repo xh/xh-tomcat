@@ -11,7 +11,8 @@ See this project's README for details on how images are tagged for use with diff
 
 ## 4.2.0 - 2026-11-18
 
-* Tomcat `10.1.62` and `11.0.29`, with fixes for CVE-2026-65905, CVE-2026-65182, and CVE-2026-68525.
+* Tomcat `10.1.62` (from `10.1.55`) and `11.0.29`. The 10.1 update picks up fixes for 40 CVEs, listed on the
+  [Tomcat 10 security page](https://tomcat.apache.org/security-10.html).
 * Base images include the latest Temurin JDK security releases (`17.0.21`, `21.0.13`, `25.0.5`).
 * Added Tomcat `11.0` images, required by Hoist apps on Grails 8+. Not built for JDK 17.
   * `release-tc11-jdk21` tags (`latest-tc11-jdk21`, `4.2.0-tc11-jdk21`).
