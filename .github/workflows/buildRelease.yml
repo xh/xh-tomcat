@@ -84,7 +84,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push image
+      - name: Build, test and push image
         env:
           VERSION_TAG: xhio/xh-tomcat:${{ inputs.version }}-${{ matrix.tomcat.tag-prefix }}-${{ matrix.jdk }}
           LATEST_TAG: xhio/xh-tomcat:latest-${{ matrix.tomcat.tag-prefix }}-${{ matrix.jdk }}
@@ -97,6 +97,7 @@ jobs:
             -t "$VERSION_TAG" \
             -t "$LATEST_TAG" \
             .
+          .github/scripts/smoke-test.sh "$VERSION_TAG" ${{ matrix.tomcat.version }} ${{ matrix.jdk }} ${{ matrix.tomcat.tag-prefix }}
           docker push "$VERSION_TAG"
           docker push "$LATEST_TAG"
 

@@ -46,7 +46,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push image
+      - name: Build, test and push image
         env:
           TOMCAT_VERSION: ${{ matrix.tomcat.version }}
           TAG_PREFIX: ${{ matrix.tomcat.tag-prefix }}
@@ -58,4 +58,5 @@ jobs:
             --build-arg JDK_VERSION="$JDK_VERSION" \
             --build-arg TOMCAT_LINE="$TAG_PREFIX" \
             -t "$TAG" .
+          .github/scripts/smoke-test.sh "$TAG" "$TOMCAT_VERSION" "$JDK_VERSION" "$TAG_PREFIX"
           docker push "$TAG"
