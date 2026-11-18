@@ -9,16 +9,21 @@ is used for deployments, without the possibility of unexpected container updates
 
 See this project's README for details on how images are tagged for use with different supported JDK versions.
 
-## next - under development
+## 4.2.0 - 2026-11-18
 
-* Tomcat `10.1` tags (`next-tc10-jdk17`, `next-tc10-jdk21`, `next-tc10-jdk25`)
-* Release builds pinned to Tomcat `10.1.62` and `11.0.29`, picking up fixes for CVE-2026-65905, CVE-2026-65182, and
-  CVE-2026-68525 and base images with the latest Temurin JDK security releases (`17.0.21`, `21.0.13`, `25.0.5`).
-* Added Tomcat `11.0` tags (`next-tc11-jdk21`, `next-tc11-jdk25`), required by Hoist apps on Grails 8+. Release builds
-  will add `release-tc11-jdk21` and `release-tc11-jdk25` on Tomcat `11.0.29`. Not built for JDK 17.
+* Tomcat `10.1.62` and `11.0.29`, with fixes for CVE-2026-65905, CVE-2026-65182, and CVE-2026-68525.
+* Base images include the latest Temurin JDK security releases (`17.0.21`, `21.0.13`, `25.0.5`).
+* Added Tomcat `11.0` images, required by Hoist apps on Grails 8+. Not built for JDK 17.
+  * `release-tc11-jdk21` tags (`latest-tc11-jdk21`, `4.2.0-tc11-jdk21`).
+  * `release-tc11-jdk25` tags (`latest-tc11-jdk25`, `4.2.0-tc11-jdk25`).
+  * `next-tc11-jdk21` and `next-tc11-jdk25` snapshot tags.
 * Moved `conf/server.xml` to `conf/tc10/server.xml` and added `conf/tc11/server.xml`, taken from Tomcat `11.0.26`'s
   default with the same XH customizations. The Dockerfile selects one via the new `TOMCAT_LINE` build arg (default
   `tc10`).
+
+### ⚠️ Deprecations
+* Legacy tags `latest`, `next`, `latest-jdk8/11/17` and `next-jdk8/11/17` are frozen and scheduled for removal from
+  Docker Hub on or after 2027-02-18. Numbered release tags stay. See the README support policy.
 
 ## 4.1.0 - 2026-05-13
 

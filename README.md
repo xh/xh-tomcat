@@ -21,8 +21,8 @@ variants below.
 | release-tc10-jdk17 | 10.1.62 | 17  | `tomcat:10.1.62-jdk17` | `latest-tc10-jdk17`, `4.2.0-tc10-jdk17` |
 | release-tc10-jdk21 | 10.1.62 | 21  | `tomcat:10.1.62-jdk21` | `latest-tc10-jdk21`, `4.2.0-tc10-jdk21` |
 | release-tc10-jdk25 | 10.1.62 | 25  | `tomcat:10.1.62-jdk25` | `latest-tc10-jdk25`, `4.2.0-tc10-jdk25` |
-| release-tc11-jdk21 | 11.0.29 | 21  | `tomcat:11.0.29-jdk21` | `latest-tc11-jdk21` (from next release) |
-| release-tc11-jdk25 | 11.0.29 | 25  | `tomcat:11.0.29-jdk25` | `latest-tc11-jdk25` (from next release) |
+| release-tc11-jdk21 | 11.0.29 | 21  | `tomcat:11.0.29-jdk21` | `latest-tc11-jdk21`, `4.2.0-tc11-jdk21` |
+| release-tc11-jdk25 | 11.0.29 | 25  | `tomcat:11.0.29-jdk25` | `latest-tc11-jdk25`, `4.2.0-tc11-jdk25` |
 
 Tomcat 11 is required by Hoist apps on Grails 8+ (Spring Boot 4 / Servlet 6.1), which also require JDK 21+, so it is
 not built for JDK 17. Each Tomcat line has its own customized `server.xml` under [`conf/`](./conf), selected by the
@@ -35,19 +35,42 @@ testing and snapshot-style deployments.
 `release-*` builds publish two tags per (Tomcat line, JDK) pair: an immutable tag pinned to a specific xh-tomcat 
 semver release (recorded in `CHANGELOG.md`) and a mutable tag that floats to the most recent release of that pair.
 
+## Support policy
+
+- Only the most recent release gets updates. Older release tags stay on Docker Hub but are not patched.
+- We cut a new release promptly when Tomcat ships a security fix on a line we track, or when the upstream base images
+  fix critical or high CVEs. Each release records its Tomcat versions in [`CHANGELOG.md`](./CHANGELOG.md).
+- For production, use `latest-tcXX-jdkYY`, or pin an exact release tag and move to each new release as it ships. A
+  pinned tag never changes, so it never picks up security fixes on its own.
+- `next-*` tags are for testing only.
+
+### Legacy tags - scheduled for removal on 2027-02-18
+
+These tags come from older releases. They are frozen, unpatched, and will be deleted from Docker Hub on or after
+**2027-02-18**. Move to a `latest-tcXX-jdkYY` tag or pin a current release tag before then.
+
+- `latest` and `next` - bare tags from 2023 and 2022 (Tomcat 8.5, JDK 8). A pull with no tag gets this old image.
+- `latest-jdk8`, `latest-jdk11`, `latest-jdk17` - last updated by the `3.x` releases (Tomcat 9.0).
+- `next-jdk8`, `next-jdk11`, `next-jdk17` - old snapshot builds (Tomcat 9.0), no longer rebuilt.
+
+Numbered release tags (e.g. `3.2.0-jdk17`) are not on this list and stay available.
+
 ## Branches and CI
 
 This repo uses a single `develop` branch (and a `master` branch tracking the most recent release).
 
 GitHub Actions workflows live in [`.github/workflows/`](./.github/workflows):
 
-- **`buildNext.yml`** — runs on every push to `develop`, on a weekly schedule, and on manual dispatch. Builds and
+- **`buildNext.yml`** - runs on every push to `develop`, on a weekly schedule, and on manual dispatch. Builds and
   pushes all `next-*` variants in parallel via a matrix.
-- **`buildRelease.yml`** — manual dispatch from `master` only. Takes a semver release version as input. The locked
+- **`buildRelease.yml`** - manual dispatch from `master` only. Takes a semver release version as input. The locked
   Tomcat patch version is pinned in the workflow's build matrix (with the [`Dockerfile`](./Dockerfile)
   `TOMCAT_VERSION` ARG default kept in sync for local builds). Builds and pushes the `release-*` variants with both 
   tags, then creates the corresponding git tag and GitHub release. To release with a newer Tomcat patch, bump the 
   matrix entry (and the Dockerfile default) and update `CHANGELOG.md` in a normal PR before dispatching the workflow.
+
+Both workflows run [`.github/scripts/smoke-test.sh`](./.github/scripts/smoke-test.sh) on each image before pushing it.
+It checks the Tomcat and JDK versions and the XH config, then boots Tomcat and checks it serves a test app.
 
 ----
 📫☎️🌎 info@xh.io | https://xh.io/contact
