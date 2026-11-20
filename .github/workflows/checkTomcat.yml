@@ -1,9 +1,10 @@
 name: Check Tomcat
 
 # Daily check for updates to the Tomcat versions pinned in tomcat-versions.json. Opens a PR to
-# develop for newer patches on the pinned lines, an issue for a newer Tomcat line or LTS JDK,
-# and an issue if develop has been idle long enough that GitHub may disable scheduled workflows.
-# See .github/scripts/check-tomcat.sh for details.
+# develop for newer patches on the pinned lines, or for upstream base image rebuilds (JDK and
+# Ubuntu updates) that our latest-* images don't have yet. Opens an issue for a newer Tomcat line
+# or LTS JDK, and if develop has been idle long enough that GitHub may disable scheduled
+# workflows. See .github/scripts/check-tomcat.sh for details.
 #
 # Branches, PRs and issues all come from the org's XH Build Bot GitHub App. Its credentials are
 # the org-level XH_BUILD_BOT_CLIENT_ID variable and XH_BUILD_BOT_PRIVATE_KEY secret.
@@ -20,6 +21,10 @@ on:
         default: false
       pinned-override:
         description: 'Test only. Treat these versions as pinned (e.g. "tc10=10.1.60 tc11=11.0.27"). Use with dry run.'
+        type: string
+        default: ''
+      compare-release:
+        description: 'Test only. Compare upstream base images against this release (e.g. "4.2.0") instead of latest-*. Use with dry run.'
         type: string
         default: ''
 
@@ -50,9 +55,18 @@ jobs:
           # Push the bump branch as the bot.
           token: ${{ steps.bot-token.outputs.token }}
 
+      # Read-only use, so image inspection avoids the anonymous pull rate limit. Hub API calls stay
+      # anonymous, and fail the run if limited.
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Check for Tomcat updates
         env:
           GH_TOKEN: ${{ steps.bot-token.outputs.token }}
           DRY_RUN: ${{ inputs.dry-run && '1' || '0' }}
           PINNED_OVERRIDE: ${{ inputs.pinned-override }}
+          COMPARE_RELEASE: ${{ inputs.compare-release || 'latest' }}
         run: .github/scripts/check-tomcat.sh
