@@ -9,6 +9,12 @@ is used for deployments, without the possibility of unexpected container updates
 
 See this project's README for details on how images are tagged for use with different supported JDK versions.
 
+## 4.2.1 - 2026-11-20
+
+* JDK security fix for [CVE-2026-114938](https://www.openwall.com/lists/oss-security/2026/11/17/31) ("Java4Shell").
+  Base images now include Temurin `17.0.21.1`, `21.0.13.1` and `25.0.5.1`. Update from `4.2.0` tags promptly.
+* No Tomcat changes (`10.1.62` and `11.0.29`).
+
 ## 4.2.0 - 2026-11-18
 
 * Tomcat `10.1.62` (from `10.1.55`) and `11.0.29`. The 10.1 update picks up fixes for 40 CVEs, listed on the
