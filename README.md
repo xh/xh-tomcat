@@ -65,6 +65,8 @@ GitHub Actions workflows live in [`.github/workflows/`](./.github/workflows):
   pushes all `next-*` variants in parallel, each on its floating `major.minor` Tomcat base image.
 - **`buildRelease.yml`** - manual dispatch from `master` only. Takes a semver release version as input. Builds and
   pushes the `release-*` variants with both tags, then creates the corresponding git tag and GitHub release.
+  A hotfix release, to a version older than the latest, gets only its numbered tags. `latest-*` stays on the newest
+  release.
 - **`checkTomcat.yml`** - runs daily. Opens a PR to `develop` when upstream publishes a newer Tomcat patch on a line
   we track, with the CVEs it fixes. Also opens a PR when upstream rebuilds the images we release on, for JDK or Ubuntu
   updates, and our `latest-*` images don't have the rebuild yet. Each PR is a prompt to cut a release. Opens an issue for a newer Tomcat line or LTS JDK, and when `develop` has gone 45
