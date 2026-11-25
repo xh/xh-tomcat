@@ -70,6 +70,11 @@ GitHub Actions workflows live in [`.github/workflows/`](./.github/workflows):
   updates, and our `latest-*` images don't have the rebuild yet. Each PR is a prompt to cut a release. Opens an issue for a newer Tomcat line or LTS JDK, and when `develop` has gone 45
   days without a commit, before GitHub disables scheduled workflows at 60. PRs and issues come from the XH Build Bot.
   Manual dispatch has a dry-run option.
+- **Slack alerts** - post to #docker-image-updates via the `SLACK_WEBHOOK_URL` secret. Each post calls for action,
+  so the channel stays quiet otherwise. After each daily check, [`slack-report.sh`](./.github/scripts/slack-report.sh)
+  posts when an open PR or bot issue has waited 3+ days, and repeats daily until it is merged or closed. Each workflow
+  posts when a run fails, and `buildRelease.yml` announces each release. New PRs and issues reach the channel as they
+  open, via the GitHub app for Slack.
 
 The Tomcat lines, their pinned patch versions and their JDKs live in [`tomcat-versions.json`](./tomcat-versions.json).
 Both build workflows read their matrix from it. To release a newer Tomcat patch, merge the Check Tomcat PR (or make
